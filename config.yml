@@ -1,0 +1,75 @@
+# -------------------- DB --------------------
+# DB Connection with the uri (host)
+client: "mongodb://localhost:27017/"
+
+# db name
+db: "aiot_course"
+
+# db collection
+col: "pamap2"
+
+
+# -------------------- Dataframe Instantiation --------------------
+# Order in which we extract per-axis values from the raw .dat columns
+order:  ["x", "y", "z"]
+# Schema-side names we expose inside the MongoDB document "data" object
+rename: ["acc_x", "acc_y", "acc_z"]
+
+
+# -------------------- Dataset Local Storage --------------------
+# Root of the PAMAP2 dataset (read in place; do not restructure)
+data_path: "data/PAMAP2_Dataset"
+
+
+# -------------------- Train / Test split (subject-disjoint) --------------------
+split:
+  train_subjects: ['101', '102', '103', '104', '105', '107']
+  test_subjects:  ['106', '108', '109']
+
+
+# -------------------- Data Engineering --------------------
+# Sliding-window algorithm parameters
+sliding_window:
+  ws: 256
+  overlap: 128
+  w_type: "hann"
+  w_center: True
+  print_stats: False
+
+# Window index used for visualising the filter effect on a single window
+x_number: 2
+
+# Butterworth low-pass filter
+filter:
+  order: 4
+  wn: 0.2          # normalised cutoff = 10 Hz / (100 Hz / 2) = 0.2
+  type: "lowpass"
+
+
+# -------------------- Learning --------------------
+classifier:
+  RandomForest:
+    n_estimators: 200
+    max_depth: null
+    random_state: 42
+  SVC:
+    C: 1
+    kernel: "rbf"
+    gamma: "scale"
+
+# -------------------- Data Preparation --------------------
+# Dimensionality reduction (PCA) — used in the feature-engineering notebook
+PCA:
+  n_comp: 0.95     # keep enough components to retain 95% of the variance
+
+
+# Parameter grid for SVM fine-tuning in the feature-engineering notebook
+fine_tune:
+  param_grid:
+    - C: [1, 10, 100, 1000]
+      kernel: ["linear"]
+    - C: [1, 10, 100, 1000]
+      gamma: [0.001, 0.0001]
+      kernel: ["rbf"]
+  cv: 5
+  verbose: 1

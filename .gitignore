@@ -1,0 +1,17 @@
+﻿# Exclude mongodump archive (too large for GitHub — kept locally for submission)
+mongodump_har/
+
+# Python/Jupyter junk
+__pycache__/
+.ipynb_checkpoints/
+*.pyc
+
+# Raw dataset (public, excluded per spec)
+data/PAMAP2_Dataset/
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Submission zip artifacts
+*.zip
